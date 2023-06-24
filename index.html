@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      background-color: #f5f5f5;
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    label {
+      font-weight: bold;
+      margin-right: 5px;
+    }
+
+    input[type="number"] {
+      width: 40px;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #money {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    #multiplier {
+      font-size: 16px;
+      color: #555;
+    }
+    .multi{
+        text-align: center;
+    }
+
+    .block {
+      width: 80px;
+      height: 80px;
+      border: 1px solid #ccc;
+      text-align: center;
+      cursor: pointer;
+      display: inline-block;
+      vertical-align: top;
+      line-height: 80px;
+      font-size: 24px;
+      font-weight: bold;
+      background-color: #eee;
+      color: #333;
+    }
+
+    .block:hover {
+      background-color: #ddd;
+    }
+
+    .bomb {
+      background-color: #FFD700;
+      color: white;
+    }
+
+    .diamond {
+      background-color: #FFD700;
+      color: #333;
+    }
+
+    .row {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .din{
+        text-align: center;
+    }
+  </style>
+  <script>
+    var totalBlocks = 25;
+    var bombCount = 0;
+    var diamondCount = 0;
+
+    function revealBlock(block) {
+      if (block.innerHTML === "") {
+        if (block.classList.contains("bomb")) {
+          block.innerHTML = "&#128163;"; // Bomb emoji
+          alert("Você perdeu! Fim de jogo.");
+        } else {
+          block.innerHTML = "&#128142;"; // Diamond emoji
+          var money = parseFloat(document.getElementById("money").innerHTML);
+          var multiplier = parseFloat(document.getElementById("multiplier").innerHTML);
+          money += 2000 * multiplier;
+          document.getElementById("money").innerHTML = money.toFixed(2);
+        }
+      }
+    }
+
+    function startGame() {
+      var blocks = document.getElementsByClassName("block");
+      for (var i = 0; i < blocks.length; i++) {
+        blocks[i].innerHTML = "";
+        blocks[i].classList.remove("bomb", "diamond");
+        blocks[i].addEventListener("click", function() {
+          revealBlock(this);
+        });
+      }
+
+      var selectedBombs = parseInt(document.getElementById("bombs").value);
+      var multiplier = 1 + (selectedBombs / 10);
+      document.getElementById("multiplier").innerHTML = multiplier.toFixed(1);
+
+      bombCount = selectedBombs;
+      diamondCount = totalBlocks - bombCount;
+
+      var randomIndexes = Array.from({length: totalBlocks}, (_, i) => i);
+      shuffleArray(randomIndexes);
+
+      for (var i = 0; i < bombCount; i++) {
+        blocks[randomIndexes[i]].classList.add("bomb");
+      }
+
+      for (var i = bombCount; i < totalBlocks; i++) {
+        blocks[randomIndexes[i]].classList.add("diamond");
+      }
+    }
+
+    // Fisher-Yates shuffle algorithm
+    function shuffleArray(array) {
+      for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+      }
+    }
+  </script>
+</head>
+<body>
+  <h1>Campos Minado</h1>
+  <div class="container">
+    <label for="bombs">Número de Bombas:</label>
+    <input type="number" id="bombs" min="1" max="9" value="4">
+    <button onclick="startGame()">Iniciar</button>
+    <button onclick="location.reload()">Jogar Novamente</button>
+  </div>
+  <p class="din">Dinheiro: R$ <span id="money">2000.00</span></p>
+  <p class="multi">Multiplicador: <span id="multiplier">1.4</span></p>
+  <div class="container">
+    <div class="row">
+      <div class="block"></div>
+      <div class="block"></div>
+      <div class="block"></div>
+      <div class="block"></div>
+      <div class="block"></div>
+    </div>
+    <div class="row">
+      <div class="block"></div>
+      <div class="block"></div>
+      <div class="block"></div>
+      <div class="block"></div>
+      <div class="block"></div>
+    </div>
+    <div class="row">
+      <div class="block"></div>
+      <div class="block"></div>
+      <div class="block"></div>
+      <div class="block"></div>
+      <div class="block"></div>
+    </div>
+    <div class="row">
+      <div class="block"></div>
+      <div class="block"></div>
+      <div class="block"></div>
+      <div class="block"></div>
+      <div class="block"></div>
+    </div>
+    <div class="row">
+      <div class="block"></div>
+      <div class="block"></div>
+      <div class="block"></div>
+      <div class="block"></div>
+      <div class="block"></div>
+    </div>
+  </div>
+</body>
+</html>
